@@ -18,6 +18,9 @@ import { GlobalState } from './global.state';
 import { NgaModule } from './theme/nga.module';
 import { PagesModule } from './pages/pages.module';
 
+import { AuthService } from '../shared/services/auth.service'
+import { SelfbitsAngularModule} from 'selfbits-angular2-sdk'
+
 // Application wide providers
 const APP_PROVIDERS = [
   AppState,
@@ -29,6 +32,19 @@ export type StoreType = {
   restoreInputValues: () => void,
   disposeOldHosts: () => void
 };
+
+export interface AppConfig {
+  BASE_URL:string,
+  APP_ID:string,
+  APP_SECRET:string
+}
+
+export const APPCONFIG:AppConfig = {
+    BASE_URL: 'https://ng-admin-tutorial-218740-api.selfbits.io',
+    APP_ID: 'ca9e0d8ab6f6e8b77493623bc098f559',
+    APP_SECRET: '943258cf633d5df0e461c43c5493ceec',
+};
+
 
 /**
  * `AppModule` is the main entry point into Angular2's bootstraping process
@@ -45,12 +61,15 @@ export type StoreType = {
     FormsModule,
     ReactiveFormsModule,
     NgaModule.forRoot(),
+    SelfbitsAngularModule.initializeApp(APPCONFIG),
     PagesModule,
     routing
   ],
   providers: [ // expose our Services and Providers into Angular's dependency injection
     ENV_PROVIDERS,
-    APP_PROVIDERS
+    APP_PROVIDERS,
+    AuthService,
+    {provide: 'APP_CONFIG_TOKEN', useValue:APPCONFIG}
   ]
 })
 
